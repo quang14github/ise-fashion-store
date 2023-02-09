@@ -1,0 +1,13 @@
+#header {
+  width: 100%;
+  min-height: 127px;
+}
+.main-header {
+  padding: 20px 40px;
+  float: left;
+  width: 100%;
+  position: relative;
+  col-lg-2 {
+    width: 16.66666667%;
+  }
+}
