@@ -1,9 +1,11 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
+import TopBar from "../TopBar/TopBar";
 import "./Header.css";
 const Header = () => {
   return (
-    <header id="header">
+    <header id="header" class="clearfix">
+      <TopBar />
       <div class="main-header hidden-xs">
         <div class="padding-lr-0 col-xs-12 col-sm-3 col-md-3 col-lg-2">
           <div
