@@ -72,6 +72,14 @@ const Navbar = () => {
                   LADY ME
                 </a>
               </li>
+              <li class="  ">
+                <a
+                  href="/collections/end-of-season-sale-50-70-eoss03"
+                  title="SALE"
+                >
+                  SALE
+                </a>
+              </li>
             </ul>
           </nav>
         </div>{" "}
