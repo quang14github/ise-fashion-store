@@ -1,11 +1,9 @@
 import React from "react";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
+import { Link } from "react-router-dom";
 import "./Register.css";
 const Register = () => {
   return (
     <div className="register">
-      <Header />
       <main>
         <div className = "layout-account">
             <div className = "padding-rl-40">
@@ -32,7 +30,7 @@ const Register = () => {
             </div>
             <div className="col-md-6 col-xs-12 wrapbox-content-page">
                 <div className="userbox">
-                        <form accept-charset="UTF-8" action="/account" id="create_customer" method="post">
+                        <form acceptCharset="UTF-8" action="/account" id="create_customer" method="post">
                             <input name="form_type" type="hidden" value="create_customer" />
                             <input name="utf8" type="hidden" />
 
@@ -41,7 +39,7 @@ const Register = () => {
                                     <i className="icon-login icon-user"></i>
                                 </label>
                                 <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text" 
-                                    name="customer[last_name]" placeholder="Họ" id="last_name" class="text" size="30" />
+                                    name="customer[last_name]" placeholder="Họ" id="last_name" className="text" size="30" />
                             </div>
 
                             <div id="first_name" className="clearfix large_form">
@@ -49,7 +47,7 @@ const Register = () => {
                                     <i className="icon-login icon-user"></i>
                                 </label>
                                 <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text" 
-                                    name="customer[first_name]" placeholder="Tên" id="first_name" class="text" size="30" />
+                                    name="customer[first_name]" placeholder="Tên" id="first_name" className="text" size="30" />
                             </div>
 
                             <div id="phone" className="clearfix large_form">
@@ -57,15 +55,15 @@ const Register = () => {
                                     <i className="icon-login icon-phone"></i>
                                 </label>
                                 <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text" 
-                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" class="text" size="30" />
+                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" />
                             </div>
 
                             <div className="clearfix large_form">
                                 <label htmlFor="customer_email" className="icon-field">
-                                    <i className="icon-login icon-envelope"></i>
+                                  <i className="icon-login icon-envelope"></i>
                                 </label>
-                                <input required type="email" 
-                                    name="customer[email]" id="customer_email" placeholder="Email" class="text" />
+                                <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email"
+                                    name="customer[email]" id="customer_email" placeholder="Email" className="text" />
                             </div>
 
                             <div className="clearfix large_form">
@@ -73,7 +71,7 @@ const Register = () => {
                                     <i className="icon-login icon-shield"></i>
                                 </label>
                                 <input required type="password" name="customer[password]"
-                                    id="customer_password" placeholder="Mật khẩu" class="text" size="16" /> 
+                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" /> 
                             </div>
                             
                             <div className="clearfix action_account_customer">
@@ -82,10 +80,10 @@ const Register = () => {
                                 </div>
                             </div>
                             <div className="clearfix req_pass">
-                                <a href="#" className="comeback">
+                                <Link to="/" className="comeback">
                                     <i className="fa fa-long-arrow-left"></i> 
                                     Quay lại trang chủ
-                                </a>
+                                </Link>
                             </div>
                         </form>
                     </div>                   
@@ -93,9 +91,6 @@ const Register = () => {
             </div>
         
       </main>
-      {/* <footer>
-        <Footer />
-      </footer> */}
     </div>
   );
 };

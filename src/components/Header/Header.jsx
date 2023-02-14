@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import TopBar from "../TopBar/TopBar";
 import "./Header.css";
@@ -28,22 +29,22 @@ const Header = () => {
           <div class="rightHeader">
             <div class="bagHeader">
               <span>
-                <a href="/cart" title="Giỏ hàng">
+                <Link to="/cart" title="Giỏ hàng">
                   <img
                     src="//theme.hstatic.net/200000000133/1000569834/14/bagIcon2.png?v=6303"
                     alt="Giỏ hàng"
                   />
                   <span class="countCart">0</span>
-                </a>
+                </Link>
               </span>
             </div>
             <div class="accountHeader">
-              <a href="/account/login" title="Tài khoản">
+              <Link to="/account/login" title="Tài khoản">
                 <img
                   src="//theme.hstatic.net/200000000133/1000569834/14/accountIcon.png?v=6303"
                   alt="Tài khoản"
                 />
-              </a>
+              </Link>
             </div>
             <div class="searchHeader">
               <form action="/search" class="searchDesktop">

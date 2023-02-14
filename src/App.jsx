@@ -1,14 +1,17 @@
+import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import Home from "./pages/Home";
-import LogIn from "./components/LogIn/LogIn";
-import Register from "./components/Register/Register";
+import LogIn from "./pages/LogIn/LogIn";
+import Register from "./pages/Register/Register";
 const App = () => {
   return (
-    // <Layout>
-    //   <Home />
-    // </Layout>
-    // <LogIn />
-    <Register />
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/account/login" element={<LogIn />} />
+        <Route path="/account/register" element={<Register />} />
+      </Routes>
+    </Layout>
   );
 };
 
