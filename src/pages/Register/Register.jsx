@@ -4,28 +4,22 @@ import "./Register.css";
 const Register = () => {
     return (
         <div className="register">
-            {/* start main   */}
-            <main>
+            
+         
                 <div className="layout-account">
-                    <div className="padding-rl-40">
-                        <div className="breadcrumb-shop">
-
-                            {/* path */}
-                            <div>
-                                <ol className="breadcrumb breadcrumb-arrows">
-                                    <li>
-                                        <a href="">Trang chủ</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Tài khoản</a>
-                                    </li>
-                                    <li className="active">
-                                        <span>Đăng ký</span>
-                                    </li>
-                                </ol>
-                            </div>
-
-                        </div>
+                    {/* path */}
+                    <div className="padding-rl-40 breadcrumb-shop">
+                        <ol className="breadcrumb breadcrumb-arrows">
+                        <li>
+                                <Link to="/">Trang chủ</Link>
+                            </li>
+                            <li>
+                                <Link to="/account">Tài khoản</Link>
+                            </li>
+                            <li className="active">
+                                <span>Đăng ký</span>
+                            </li>
+                        </ol>
                     </div>
 
                     {/* name-page */}
@@ -46,7 +40,7 @@ const Register = () => {
                             <form acceptCharset="UTF-8" action="/account" id="create_customer" method="post">
                                 <input name="form_type" type="hidden" value="create_customer" />
                                 <input name="utf8" type="hidden" />
-                                
+
                                 {/* last-name box */}
                                 <div id="last_name" className="clearfix large_form">
                                     <label htmlFor="last_name" className="label icon-field">
@@ -70,17 +64,8 @@ const Register = () => {
                                     <label htmlFor="phone" className="label icon-field">
                                         <i className="icon-login icon-phone"></i>
                                     </label>
-                                    <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
+                                    <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
                                         name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" />
-                                </div>
-
-                                {/* email box */}
-                                <div className="clearfix large_form">
-                                    <label htmlFor="customer_email" className="icon-field">
-                                        <i className="icon-login icon-envelope"></i>
-                                    </label>
-                                    <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email"
-                                        name="customer[email]" id="customer_email" placeholder="Email" className="text" />
                                 </div>
 
                                 {/* password box */}
@@ -100,17 +85,13 @@ const Register = () => {
                                 </div>
                                 <div className="clearfix req_pass">
                                     <Link to="/" className="comeback">
-                                        <i className="fa fa-long-arrow-left"></i>
-                                        Quay lại trang chủ
+                                        <i className="fa fa-long-arrow-left"></i> Quay lại trang chủ
                                     </Link>
                                 </div>
-
                             </form>
                         </div>
                     </div>
-
                 </div>
-            </main>
         </div>
     );
 };
