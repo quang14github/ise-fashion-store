@@ -5,6 +5,7 @@ import LogIn from "./pages/LogIn/LogIn";
 import Register from "./pages/Register/Register";
 import Account from "./pages/Account/Account";
 import Cart from "./pages/Cart/Cart";
+import Collection from "./pages/Collection/Collection";
 const App = () => {
   return (
     <Router>
