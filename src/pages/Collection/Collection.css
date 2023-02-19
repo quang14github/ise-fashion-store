@@ -1,0 +1,198 @@
+.titlePageAll {
+  font-size: 29px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #111;
+  margin: 0;
+  float: left;
+}
+.wrap-collection-title {
+  margin: 30px 0;
+  float: left;
+  width: 100%;
+}
+.heading-collection > div {
+  padding: 0;
+}
+.sort-by {
+  outline: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.option.browse-tags {
+  float: right;
+}
+.content-product-list .product-block {
+  margin-bottom: 61px;
+}
+.titleNumber {
+  font-size: 16px;
+}
+#pagination svg {
+  width: 12px;
+  height: 12px;
+  fill: #c0c0c0 !important;
+}
+.sortpagibar.pagi {
+  margin: 30px 0 50px 0;
+}
+#pagination > span,
+#pagination > a {
+  display: inline-block;
+  margin: 0 5px;
+}
+#pagination .page-node {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  line-height: 26px;
+  position: relative;
+  text-align: center;
+}
+#pagination .page-node.current {
+  background: black;
+  color: white;
+}
+#pagination .page-node:hover {
+  background: black;
+  color: white;
+}
+#pagination .page-node:hover svg,
+#pagination .page-node:hover svg path {
+  fill: white !important;
+}
+.filter-custom {
+  float: right;
+  margin: -4px 0 0 0px;
+  font-size: 13px;
+}
+.filter-custom > span {
+  float: left;
+  margin-right: 0;
+  padding: 10px 0;
+}
+.group-filter {
+  float: left;
+  margin-left: 30px;
+  position: relative;
+  padding: 10px 0;
+}
+.layered-content {
+  position: absolute;
+  top: 38px;
+  left: -51px;
+  border: 1px solid #cbcbcb;
+  min-width: 150px;
+  display: none;
+  padding: 15px;
+  box-shadow: 2px 2px 1px 0px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  background: white;
+}
+.layered_subtitle span {
+  float: left;
+  font-weight: bold;
+  cursor: pointer;
+}
+.layered_subtitle .icon-control {
+  margin: -2px 0 0 5px;
+  cursor: pointer;
+  color: #b6b6b6;
+}
+.layered_subtitle {
+  cursor: pointer;
+  position: relative;
+}
+.group-filter:hover .layered-content {
+  display: block;
+}
+.check-box-list label {
+  font-family: "Quicksand";
+  display: inline-block;
+  cursor: pointer;
+  line-height: 12px;
+  font-weight: normal;
+  margin-bottom: 10px;
+}
+.check-box-list input[type="checkbox"] {
+  display: none;
+}
+.check-box-list input[type="checkbox"] + label span.button,
+.not_show span.buttonk {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  padding: 0;
+  border: 1px solid #ebebeb;
+}
+.check-box-list input[type="checkbox"]:checked + label span.button {
+  background: #ff3366
+    url(//theme.hstatic.net/200000000133/1000569834/14/checked.png?v=6336)
+    no-repeat center center;
+}
+.filter-color .check-box-list li input[type="checkbox"] + label span.button {
+  background: 0 0;
+  margin: 0;
+  border: none;
+}
+.filter-color li {
+  margin: 0 5px 0 5px;
+  float: left;
+}
+.filter-color li label {
+  border: 1px solid #eaeaea;
+  width: 25px;
+  height: 25px;
+  padding-top: 6px;
+  padding-left: 6px;
+  float: left;
+  margin-bottom: 5px;
+}
+.filter-color li input[type="checkbox"]:checked + label {
+  border-color: #ff3366;
+  background-image: url(//theme.hstatic.net/200000000133/1000569834/14/select-pro.png?v=6336);
+  background-position: right bottom;
+  background-repeat: no-repeat;
+}
+.option.browse-tags label {
+  font-weight: normal;
+}
+.alert-no {
+  clear: both;
+  margin: 20px 0;
+  display: inline-block;
+  width: 100%;
+}
+.alert-no-filter p {
+  clear: both;
+  margin: 20px 0;
+  display: inline-block;
+  width: 100%;
+}
+.alert-no p {
+  margin: 0;
+}
+.menuCollection {
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 0;
+}
+.menuCollection li {
+  display: inline-block;
+}
+.menuCollection li a {
+  padding: 0px 10px;
+  display: inherit;
+  border-right: 1px solid;
+  margin: 12px 0;
+  line-height: 10px;
+  font-size: 15px;
+}
+.menuCollection li a.filter--active {
+  font-weight: bold;
+}
+.menuCollection li:last-child a {
+  border: none;
+}
