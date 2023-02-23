@@ -1,7 +1,43 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
-const Register = () => {
+import { useState } from "react";
+
+async function registerUser(credentials) {
+    return fetch('http://localhost:3000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    })
+      .then(data => data.json())
+   }
+
+
+   
+const Register = ({setToken}) => {
+
+    const [phone, setPhone] = useState();
+    const [name, setName] = useState();
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [address, setAddress] = useState();
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const token = await registerUser({
+          phone,
+          password,
+          email,
+          address,
+          name
+        });
+
+        setToken(token);
+      }
+
+
     return (
         <div className="register">
             <div className="layout-account">
@@ -35,26 +71,26 @@ const Register = () => {
                         </div>
 
                         {/* form */}
-                        <form acceptCharset="UTF-8" action="/account" id="create_customer" method="post">
+                        <form acceptCharset="UTF-8" action="/account" id="create_customer" method="post" onSubmit={handleSubmit}>
                             <input name="form_type" type="hidden" value="create_customer" />
                             <input name="utf8" type="hidden" />
 
-                            {/* last-name box */}
-                            <div id="last_name" className="clearfix large_form">
-                                <label htmlFor="last_name" className="label icon-field">
+                            {/* name box */}
+                            <div id="name" className="clearfix large_form">
+                                <label htmlFor="name" className="label icon-field">
                                     <i className="icon-login icon-user"></i>
                                 </label>
-                                <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
-                                    name="customer[last_name]" placeholder="Họ" id="last_name" className="text" size="30" />
+                                <input type="text"
+                                    name="customer[name]" placeholder="Tên" id="name" className="text" size="30" onChange={e => setName(e.target.value)} />
                             </div>
 
-                            {/* first-name box */}
-                            <div id="first_name" className="clearfix large_form">
-                                <label htmlFor="first_name" className="label icon-field">
+                            {/* email box */}
+                            <div id="email" className="clearfix large_form">
+                                <label htmlFor="email" className="label icon-field">
                                     <i className="icon-login icon-user"></i>
                                 </label>
-                                <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
-                                    name="customer[first_name]" placeholder="Tên" id="first_name" className="text" size="30" />
+                                <input type="text"
+                                    name="customer[email]" placeholder="Email" id="email" className="text" size="30" onChange={e => setEmail(e.target.value)}/>
                             </div>
 
                             {/* phone box */}
@@ -62,8 +98,17 @@ const Register = () => {
                                 <label htmlFor="phone" className="label icon-field">
                                     <i className="icon-login icon-phone"></i>
                                 </label>
-                                <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
-                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" />
+                                <input required type="text"
+                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" onChange={e => setPhone(e.target.value)} />
+                            </div>
+
+                            {/* address box */}
+                            <div id="address" className="clearfix large_form">
+                                <label htmlFor="address" className="label icon-field">
+                                    <i className="icon-login icon-user"></i>
+                                </label>
+                                <input type="text"
+                                    name="customer[address]" placeholder="Địa chỉ" id="address" className="text" size="30" onChange={e => setAddress(e.target.value)} />
                             </div>
 
                             {/* password box */}
@@ -72,7 +117,7 @@ const Register = () => {
                                     <i className="icon-login icon-shield"></i>
                                 </label>
                                 <input required type="password" name="customer[password]"
-                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" />
+                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" onChange={e => setPassword(e.target.value)}/>
                             </div>
 
                             {/* button  */}
