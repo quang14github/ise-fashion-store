@@ -1,17 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import "./LogIn.css";
 const LogIn = () => {
 
-    function showRecoverPasswordForm() {
+    const showRecoverPasswordForm = () => {
         document.getElementById('recover-password').style.display = 'block';
         document.getElementById('login').style.display = 'none';
     }
 
-    function hideRecoverPasswordForm() {
+    const hideRecoverPasswordForm = () => {
         document.getElementById('recover-password').style.display = 'none';
         document.getElementById('login').style.display = 'block';
     }
+
+    const [phone,setPhone] = useState('')
+    const [password, setPassword] = useState('')
+
+    const handleLogin = () => {
+        // console.log(phone)
+        // console.log(password)
+    }
+    useEffect(() => {
+        fetch('https://jsonplaceholder.typicode.com/users') 
+        .then(res => res.json())
+        .then(user => {
+            console.log(user)
+        })
+    }, [])
 
     return (
         <div className="login">
@@ -46,7 +62,7 @@ const LogIn = () => {
                         </div>
 
                         {/* form */}
-                        <form acceptCharset="UTF-8" action="/account/login" id="customer_login" method="post">
+                        <div acceptCharset="UTF-8" action="/account/login" id="customer_login" method="post">
                             <input name="form_type" type="hidden" value="customer_login" />
                             <input name="utf8" type="hidden" />
 
@@ -56,7 +72,8 @@ const LogIn = () => {
                                     <i className="icon-login icon-phone"></i>
                                 </label>
                                 <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
-                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" />
+                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" 
+                                    value={phone} onChange={e =>setPhone(e.target.value)} />
                             </div>
 
                             {/* password box */}
@@ -65,13 +82,14 @@ const LogIn = () => {
                                     <i className="icon-login icon-shield"></i>
                                 </label>
                                 <input required type="password" name="customer[password]"
-                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" />
+                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" 
+                                    value={password} onChange={e => setPassword(e.target.value)} />
                             </div>
 
                             {/* button */}
                             <div className="clearfix action_account_customer">
                                 <div className="action_bottom button dark">
-                                    <input type="submit" className="btn btn-signin" value="Đăng nhập" />
+                                    <input type="submit" className="btn btn-signin" onClick={handleLogin()} value="Đăng nhập"/>
                                 </div>
                                 <div className="req_pass">
                                     <Link to="/account/login" onClick={showRecoverPasswordForm}>
@@ -81,7 +99,7 @@ const LogIn = () => {
                                     hoặc <Link to="/account/register" title="Đăng ký">Đăng ký</Link>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     {/* recover password box */}
