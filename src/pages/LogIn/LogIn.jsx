@@ -1,7 +1,37 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./LogIn.css";
-const LogIn = () => {
+import { useState } from "react";
+import PropTypes from 'prop-types';
+
+async function loginUser(credentials) {
+    return fetch('http://localhost:3000/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    })
+      .then(data => data.json())
+   }
+
+const LogIn = ({ setToken }) => {
+    const [phone, setPhone] = useState();
+    const [password, setPassword] = useState();
+
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const token = await loginUser({
+          phone,
+          password
+        });
+        console.log(token);
+        setToken(token);
+      }
+
+    LogIn.propTypes = {
+        setToken: PropTypes.func.isRequired
+      }
 
     function showRecoverPasswordForm() {
         document.getElementById('recover-password').style.display = 'block';
@@ -46,7 +76,7 @@ const LogIn = () => {
                         </div>
 
                         {/* form */}
-                        <form acceptCharset="UTF-8" action="/account/login" id="customer_login" method="post">
+                        <form acceptCharset="UTF-8" action="/account/login" id="customer_login" method="post" onSubmit={handleSubmit}>
                             <input name="form_type" type="hidden" value="customer_login" />
                             <input name="utf8" type="hidden" />
 
@@ -56,7 +86,7 @@ const LogIn = () => {
                                     <i className="icon-login icon-phone"></i>
                                 </label>
                                 <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
-                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" />
+                                    name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" onChange={e => setPhone(e.target.value)}/>
                             </div>
 
                             {/* password box */}
@@ -65,7 +95,7 @@ const LogIn = () => {
                                     <i className="icon-login icon-shield"></i>
                                 </label>
                                 <input required type="password" name="customer[password]"
-                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" />
+                                    id="customer_password" placeholder="Mật khẩu" className="text" size="16" onChange={e => setPassword(e.target.value)} />
                             </div>
 
                             {/* button */}
