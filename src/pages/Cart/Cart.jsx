@@ -61,6 +61,7 @@ const Cart = () => {
 
     function payment(){
         alert("Thanh toan thanh cong!")
+        setLists([]);
     }
 
     return (
