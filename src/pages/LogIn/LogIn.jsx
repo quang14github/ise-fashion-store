@@ -85,7 +85,7 @@ const LogIn = ({ setToken }) => {
                                 <label htmlFor="phone" className="label icon-field">
                                     <i className="icon-login icon-phone"></i>
                                 </label>
-                                <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
+                                <input required type="text"
                                     name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" onChange={e => setPhone(e.target.value)}/>
                             </div>
 

@@ -4,7 +4,7 @@ import "./Register.css";
 import { useState } from "react";
 
 async function registerUser(credentials) {
-    return fetch('http://localhost:3000/login', {
+    return fetch('http://localhost:3000/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ const Register = ({setToken}) => {
           address,
           name
         });
-        console.log(token);
+
         setToken(token);
       }
 
@@ -80,7 +80,7 @@ const Register = ({setToken}) => {
                                 <label htmlFor="name" className="label icon-field">
                                     <i className="icon-login icon-user"></i>
                                 </label>
-                                <input onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
+                                <input type="text"
                                     name="customer[name]" placeholder="Tên" id="name" className="text" size="30" onChange={e => setName(e.target.value)} />
                             </div>
 
@@ -98,7 +98,7 @@ const Register = ({setToken}) => {
                                 <label htmlFor="phone" className="label icon-field">
                                     <i className="icon-login icon-phone"></i>
                                 </label>
-                                <input required onkeyup="this.value=this.value.replace(/[^a-z,0-9]/g,'');" type="text"
+                                <input required type="text"
                                     name="customer[phone]" placeholder="Số điện thoại" id="phone" className="text" size="30" onChange={e => setPhone(e.target.value)} />
                             </div>
 
