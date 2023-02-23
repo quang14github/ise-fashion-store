@@ -26,18 +26,20 @@ const Cart = () => {
     //         count: 1
     //     }
     // ]
-    
     const listProduct = [];
+    const [lists, setLists] = useState([]);
     //call API
     useEffect(()=>{
         fetch('http://localhost:8080/item/')
             .then(res => res.json())
             .then((result)=>{
+                //copy item to listProduct
                 listProduct = result.slice();
+                // set State
                 setLists(listProduct);
             })
     })
-    const [lists, setLists] = useState(listProduct);
+    
 
     function addProduct(index){
         listProduct[index].count +=1; 
