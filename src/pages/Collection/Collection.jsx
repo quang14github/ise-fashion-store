@@ -51,12 +51,12 @@ const Collection = () => {
 
           <Link
             to={`${product.productId}`}
-            title="Áo kiểu 21AOTE018F"
+            title={product.name}
             class="image-resize"
           >
             <img
               class="img-loop"
-              alt=" Áo kiểu 21AOTE018F "
+              alt={product.name}
               src={product.detailImages[0]}
             />
           </Link>
