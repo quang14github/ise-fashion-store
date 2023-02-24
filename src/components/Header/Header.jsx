@@ -1,9 +1,41 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import TopBar from "../TopBar/TopBar";
+import useToken from "../../hooks/useToken";
+import { CheckError } from "../../utils/CheckError";
+
 import "./Header.css";
 const Header = () => {
+  // const [cartCount, setCartCount] = useState([]);
+  // const { token } = useToken();
+  const [searchId, setSearchId] = useState("");
+  const navigate = useNavigate();
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate("/collections/" + searchId);
+  };
+  //call API
+  // useEffect(() => {
+  //   fetch("http://localhost:8080/cart", {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then(CheckError)
+  //     .then((result) => {
+  //       setCartCount(
+  //         result.cartItems.reduce(
+  //           (accumulator, item) => accumulator + parseInt(item.quantity),
+  //           0
+  //         )
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
   return (
     <header id="header" className="clearfix">
       <TopBar />
@@ -14,14 +46,14 @@ const Header = () => {
             itemScope=""
             itemType="http://schema.org/Organization"
           >
-            <NavLink to="/">
+            <Link to="/">
               <img
                 src="//file.hstatic.net/1000358207/file/logo_eva.svg"
                 alt="Eva De Eva"
                 className="img-responsive logoimg"
                 itemProp="logo"
               />
-            </NavLink>
+            </Link>
           </div>
         </div>
         <Navbar />
@@ -29,25 +61,29 @@ const Header = () => {
           <div className="rightHeader">
             <div className="bagHeader">
               <span>
-                <a href="/cart" title="Giỏ hàng">
+                <Link to="/cart" title="Giỏ hàng">
                   <img
                     src="//theme.hstatic.net/200000000133/1000569834/14/bagIcon2.png?v=6303"
                     alt="Giỏ hàng"
                   />
-                  <span className="countCart">0</span>
-                </a>
+                  {/* <span className="countCart">{cartCount}</span> */}
+                </Link>
               </span>
             </div>
             <div className="accountHeader">
-              <a href="/account/login" title="Tài khoản">
+              <Link to="/account" title="Tài khoản">
                 <img
                   src="//theme.hstatic.net/200000000133/1000569834/14/accountIcon.png?v=6303"
                   alt="Tài khoản"
                 />
-              </a>
+              </Link>
             </div>
             <div className="searchHeader">
-              <form action="/search" className="searchDesktop">
+              <form
+                action="/search"
+                className="searchDesktop"
+                onSubmit={(e) => handleSearch(e)}
+              >
                 <input type="hidden" name="type" value="product" />
                 <input
                   required=""
@@ -56,7 +92,8 @@ const Header = () => {
                   id="searchInputDesktop"
                   className="searchInput"
                   placeholder="Tìm sản phẩm..."
-                  value=""
+                  value={searchId}
+                  onChange={(e) => setSearchId(e.target.value)}
                 />
                 <input type="submit" className="searchButton" value="" />
               </form>
