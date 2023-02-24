@@ -1,10 +1,106 @@
-import React from "react";
-
+import { React, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import mockData from "../../mock/product/product";
+const catgoryList = [
+  { name: "Áo", id: "shirt" },
+  { name: "Quần", id: "pant" },
+  { name: "Váy", id: "dress" },
+  { name: "Tất cả sản phẩm", id: "all" },
+];
 const Collection = () => {
+  const [productList, setProductList] = useState(mockData);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  // const fetchData = (selectedCategory) => {
+  //   try {
+  //     fetch("localhost:8080/item/category/" + selectedCategory)
+  //       .then((response) => {
+  //         return response.json();
+  //       })
+  //       .then((data) => {
+  //         setProductList(data);
+  //       });
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchData(selectedCategory);
+  // }, [selectedCategory]);
+  const handleCatgoryClick = (e) => {
+    e.preventDefault();
+    setSelectedCategory(e.target.id);
+    setProductList(
+      mockData.filter(
+        (product) => product.category === e.target.id || e.target.id === "all"
+      )
+    );
+  };
+  const catgoryListGen = catgoryList.map((catgory) => (
+    <li>
+      <a href="" id={catgory.id} onClick={handleCatgoryClick}>
+        {catgory.name}
+      </a>
+    </li>
+  ));
+  const productListGen = productList.map((product) => (
+    <div class="col-md-3 col-sm-6 col-xs-6 pro-loop animated zoomIn">
+      <div class="product-block">
+        <div class="product-img">
+          {/* <div class="label-sale">-70%</div> */}
+
+          <Link
+            to={`${product.productId}`}
+            title="Áo kiểu 21AOTE018F"
+            class="image-resize"
+          >
+            <img
+              class="img-loop"
+              alt=" Áo kiểu 21AOTE018F "
+              src={product.detailImages[0]}
+            />
+          </Link>
+        </div>
+        <div class="product-detail clearfix">
+          <div class="box-pro-detail">
+            <h3 class="pro-name">
+              <Link to={`${product.productId}`} title={product.name}>
+                {product.name}
+              </Link>
+            </h3>
+            <div class="box-pro-prices">
+              <p class="pro-price highlight">
+                <span>{product.price}</span>
+                <span class="pro-price-del">
+                  <del class="compare-price">{product.ogPrice}</del>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>{" "}
+    </div>
+  ));
   return (
     <div id="collection" className="collection-page">
       <div className="padding-rl-40">
         <div className="main-content">
+          <div class="breadcrumb-shop">
+            <div
+              class=""
+              itemscope=""
+              itemtype="http://data-vocabulary.org/Breadcrumb"
+            >
+              <ol class="breadcrumb breadcrumb-arrows">
+                <li>
+                  <Link to="/">Trang chủ</Link>
+                </li>
+                <li class="active">
+                  <span>Sản phẩm</span>
+                </li>
+              </ol>
+            </div>{" "}
+          </div>
           <div className=" banner-collection-header"></div>
           <div id="collection-body" className="wrap-collection-body clearfix">
             <div className="wrap-collection-title">
@@ -16,40 +112,7 @@ const Collection = () => {
                       <i className="fa fa-sort-down"></i>
                     </span>
                   </h1>
-                  <ul className="menuCollection">
-                    <li>
-                      <a href="/collections/dam">Đầm </a>
-                    </li>
-                    <li>
-                      <a href="/collections/ao">Áo </a>
-                    </li>
-                    <li>
-                      <a href="/collections/ao-so-mi">Áo sơ mi </a>
-                    </li>
-                    <li>
-                      <a href="/collections/ao-kieu">Áo Kiểu </a>
-                    </li>
-                    <li>
-                      <a href="/collections/jumpsuit">Jumpsuit </a>
-                    </li>
-                    <li>
-                      <a href="/collections/chan-vay">Chân váy </a>
-                    </li>
-                    <li>
-                      <a href="/collections/quan">Quần </a>
-                    </li>
-                    <li>
-                      <a href="/collections/homewear">Homewear </a>
-                    </li>
-                    <li>
-                      <a
-                        className="filter--active"
-                        href="/collections/san-pham"
-                      >
-                        Tất cả sản phẩm{" "}
-                      </a>
-                    </li>
-                  </ul>
+                  <ul className="menuCollection">{catgoryListGen}</ul>
                 </div>
                 <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                   <div className="filter-custom">
@@ -111,84 +174,6 @@ const Collection = () => {
                             <label for="data-size-p4">
                               <span className="button"></span>
                               XL
-                            </label>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="group-filter" aria-expanded="true">
-                      <div className="layered_subtitle dropdown-filter">
-                        <span>Giá sản phẩm</span>
-                        <span className="icon-control">
-                          <i className="fa fa-sort-down"></i>
-                        </span>
-                      </div>
-                      <div className="layered-content bl-filter filter-price">
-                        <ul className="check-box-list clearfix">
-                          <li>
-                            <input
-                              type="checkbox"
-                              id="p1"
-                              data-text="Dưới 500,000đ"
-                              name="price-filter"
-                              data-price="(price:product<=500000)"
-                            />
-                            <label for="p1">
-                              <span className="button"></span>
-                              <span>Dưới</span> 500,000đ
-                            </label>
-                          </li>
-                          <li>
-                            <input
-                              type="checkbox"
-                              id="p2"
-                              data-text="500,000đ - 1,000,000đ"
-                              name="price-filter"
-                              data-price="((price:product>500000)&amp;&amp;(price:product<=1000000))"
-                            />
-                            <label for="p2">
-                              <span className="button"></span>
-                              500,000đ - 1,000,000đ
-                            </label>
-                          </li>
-                          <li>
-                            <input
-                              type="checkbox"
-                              id="p3"
-                              data-text="1,000,000đ - 1,500,000đ"
-                              name="price-filter"
-                              data-price="((price:product>1000000)&amp;&amp;(price:product<=1500000))"
-                            />
-                            <label for="p3">
-                              <span className="button"></span>
-                              1,000,000đ - 1,500,000đ
-                            </label>
-                          </li>
-                          <li>
-                            <input
-                              type="checkbox"
-                              id="p4"
-                              data-text="1,500,000đ - 2,000,000đ"
-                              name="price-filter"
-                              data-price="((price:product>1500000)&amp;&amp;(price:product<=2000000))"
-                            />
-                            <label for="p4">
-                              <span className="button"></span>
-                              1,500,000đ - 2,000,000đ
-                            </label>
-                          </li>
-                          <li>
-                            <input
-                              type="checkbox"
-                              id="p5"
-                              data-text="Trên 2,000,000đ"
-                              name="price-filter"
-                              data-price="(price:product>=2000000)"
-                            />
-                            <label for="p5">
-                              <span className="button"></span>
-                              <span>Trên</span> 2,000,000đ
                             </label>
                           </li>
                         </ul>
@@ -364,77 +349,7 @@ const Collection = () => {
             <div className="clear-fix filter-here">
               <div className="alert-no-filter"></div>
               <div className="bigProductNoFilter content-product-list product-list filter clearfix">
-                <div className="row">
-                  <div className="width50 col-md-3 col-sm-6 col-xs-6 pro-loop animated zoomIn 1">
-                    <div className="product-block">
-                      <div className="product-img">
-                        <div className="labelTagProduct">
-                          <img
-                            src="https://file.hstatic.net/200000000133/file/label_50_816265e4046f4d989d40e129242ebebc.png"
-                            alt="label "
-                          />
-                        </div>
-
-                        <a
-                          href="/products/chan-vay-midi-xep-ly-22acve036x1"
-                          title="Chân váy Midi, Xếp ly 22ACVE036X1"
-                          className="image-resize"
-                        >
-                          <picture>
-                            <source
-                              media="(max-width: 767px)"
-                              srcset="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_b_76307b4d6e4a472a8b0bf9035aa4f8fb_grande.jpg"
-                            />
-                            <source
-                              media="(min-width: 768px)"
-                              srcset="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_b_76307b4d6e4a472a8b0bf9035aa4f8fb_master.jpg"
-                            />
-                            <img
-                              className="img-loop"
-                              alt=" Chân váy Midi, Xếp ly 22ACVE036X1 "
-                              src="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_b_76307b4d6e4a472a8b0bf9035aa4f8fb_master.jpg"
-                            />
-                          </picture>
-                          <picture>
-                            <source
-                              media="(max-width: 767px)"
-                              srcset="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_a_a351d9367eaf4b758ebb1c587c8ad457_grande.jpg"
-                            />
-                            <source
-                              media="(min-width: 768px)"
-                              srcset="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_a_a351d9367eaf4b758ebb1c587c8ad457_master.jpg"
-                            />
-                            <img
-                              className="img-loop img-hover"
-                              alt=" Chân váy Midi, Xếp ly 22ACVE036X1 "
-                              src="//product.hstatic.net/200000000133/product/22aote035x_-_22acve036x_a_a351d9367eaf4b758ebb1c587c8ad457_master.jpg"
-                            />
-                          </picture>
-                        </a>
-                      </div>
-                      <div className="product-detail clearfix">
-                        <div className="box-pro-detail">
-                          <h3 className="pro-name">
-                            <a
-                              href="/products/chan-vay-midi-xep-ly-22acve036x1"
-                              title="Chân váy Midi, Xếp ly 22ACVE036X1"
-                            >
-                              Chân váy Midi, Xếp ly 22ACVE036X1
-                            </a>
-                          </h3>
-                          <div className="box-pro-prices">
-                            <p className="pro-price highlight">
-                              <span>599,500đ</span>
-                              <span className="pro-price-del">
-                                <del className="compare-price">1,199,000đ</del>
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>{" "}
-                  </div>
-                </div>
+                <div className="row">{productListGen}</div>
               </div>
             </div>
           </div>
