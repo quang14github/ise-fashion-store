@@ -1,208 +1,341 @@
 import { Link } from "react-router-dom";
-import './Cart.css';
-import React, {useState, useEffect} from "react";
-
+import "./Cart.css";
+import React, { useState, useEffect } from "react";
+import useToken from "../../hooks/useToken";
+import { CheckError } from "../../utils/CheckError";
+import mockData from "../../mock/product/product";
+import { getAuthHeaders } from "../../utils/GetAuthHeaders";
 const Cart = () => {
-    // const listProduct = [
-    //     {
-    //         imgURL: ' //product.hstatic.net/200000000133/product/23svao003v_-_23sawe003t_-_23svjo003v_b_58b6f7174c7d49e9ab4df23db12aca29_medium.jpg',
-    //         name: 'Váy trong bộ Vest-Váy,  23SVJO003V',
-    //         variant: 'Tím / M / Tuýt si',
-    //         price: 700000,
-    //         count: 1
-    //     },
-    //     {
-    //         imgURL: ' //product.hstatic.net/200000000133/product/23svao003v_-_23sawe003t_-_23svjo003v_b_58b6f7174c7d49e9ab4df23db12aca29_medium.jpg',
-    //         name: 'Váy trong bộ Vest-Váy,  23SVJO003V',
-    //         variant: 'Tím / M / Tuýt si',
-    //         price: 800000,
-    //         count: 1
-    //     },
-    //     {
-    //         imgURL: ' //product.hstatic.net/200000000133/product/23svao003v_-_23sawe003t_-_23svjo003v_b_58b6f7174c7d49e9ab4df23db12aca29_medium.jpg',
-    //         name: 'Váy trong bộ Vest-Váy,  23SVJO003V',
-    //         variant: 'Tím / M / Tuýt si',
-    //         price: 500000,
-    //         count: 1
-    //     }
-    // ]
-    const [lists, setLists] = useState([]);
-    //call API
-    useEffect(()=>{
-        fetch('http://localhost:3000/db.json')
-            .then(res =>res.json())
-            .then((result)=>{
-                //copy item to listProduct
-                // set State
-                setLists(result);
-            })
-    },[])
-    
-    const listProduct = [...lists];
+  const [productList, setProductList] = useState([]);
+  const [totalPurchase, setTotalPurchase] = useState(0);
+  const { token } = useToken();
+  //call API
+  useEffect(() => {
+    fetch("http://localhost:8080/cart", {
+      method: "GET",
+      headers: getAuthHeaders(),
+    })
+      .then(CheckError)
+      .then((result) => {
+        //copy item to listProduct
+        // set State
 
-    function addProduct(index){
-        listProduct[index].count +=1; 
-        setLists(listProduct);
-    }
+        setProductList(
+          result.cartItems.map((item) => {
+            return {
+              ...item,
+              price: parseInt(item.price),
+              quantity: parseInt(item.quantity),
+              cartImage: mockData.find(
+                (product) => product.productId == item.itemId
+              ).cartImage,
+            };
+          })
+        );
+        setTotalPurchase(
+          result.cartItems.reduce(
+            (accumulator, item) =>
+              accumulator + parseInt(item.quantity) * parseInt(item.price),
+            0
+          )
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
-    function removeProduct(index){
-        if (listProduct[index].count === 0) return;
-        else{
-            listProduct[index].count -= 1; 
-            setLists(listProduct);
+  function addProduct(index) {
+    setProductList(
+      [...productList].map((item, _index) => {
+        if (_index == index && item.quantity < 5) {
+          item.quantity += 1;
+          setTotalPurchase(totalPurchase + item.price);
         }
-    }
+        return item;
+      })
+    );
+  }
 
-    var total = 0;
-    for (var product of listProduct){
-        total += product.price * product.count;
-    }
+  function removeProduct(index) {
+    setProductList(
+      [...productList].map((item, _index) => {
+        if (_index == index && item.quantity > 1) {
+          item.quantity -= 1;
+          setTotalPurchase(totalPurchase - item.price);
+        }
+        return item;
+      })
+    );
+  }
 
-    function payment(){
-        alert("Thanh toan thanh cong!")
-        setLists([]);
-    }
+  const handlePayment = (e) => {
+    e.preventDefault();
 
-    return (
-        <div className="layout-cart">
-            <div className="padding-rl-40 breadcrumb-shop">
-                {/* path */}
-                <div>
-                    <ul className="breadcrumb breadcrumb-arrows">
-                        <li>
-                            <Link to="/">Trang chủ</Link>
-                        </li>
-                        <li className="active">
-                            <Link to="/cart">Giỏ hàng</Link>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    fetch("http://localhost:8080/cart", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(CheckError)
+      .then((result) => {
+        alert("Thanh toán thành công");
+        setProductList([]);
+        setTotalPurchase(0);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Thanh toán không thành công");
+      });
+  };
 
-            <div hidden className="padding-rl-40 wrap-content-cart span12 expanded-message text-center" style={{ margin: "80px auto" }} >
-                Giỏ hàng của bạn đang trống
-                <p className="link-continue">
-                    <Link to="/collection/all" className="button dark">
-                        <i className="fa fa-reply"></i> Tiếp tục mua hàng
-                    </Link>
-                </p>
-            </div>
+  return (
+    token && (
+      <div className="layout-cart">
+        <div className="padding-rl-40">
+          <div className="breadcrumb-shop">
+            <div className="" itemType="http://data-vocabulary.org/Breadcrumb">
+              <ol className="breadcrumb breadcrumb-arrows">
+                <li>
+                  <Link to="/">Trang chủ</Link>
+                </li>
+                <li className="active">
+                  <span>Giỏ hàng</span>
+                </li>
+              </ol>
+            </div>{" "}
+          </div>
+        </div>
+        <div className="padding-rl-40">
+          <div className="wrapbox-content-cart">
+            {/* <div
+            hidden
+            className=" span12 expanded-message text-center"
+            style={{ margin: "80px auto" }}
+          >
+            Giỏ hàng của bạn đang trống
+            <p className="link-continue">
+              <Link to="/collection/all" className="button dark">
+                <i className="fa fa-reply"></i> Tiếp tục mua hàng
+              </Link>
+            </p>
+          </div> */}
 
-            <div style={{ display: "block" }} className="padding-rl-40 wrapbox-content-cart cart-container cart-col-left main-content-cart">
-                <form id="cartformpage">
-                    <div id="cart" className="row col-md-12 col-sm-12 col-xs-12">
-                        <table className="table-cart">
+            <div className="cart-container">
+              <div className="cart-col-left ">
+                <div className="main-content-cart">
+                  <form id="cartformpage" onSubmit={(e) => handlePayment(e)}>
+                    <div className="row">
+                      <div className="col-md-12 col-sm-12 col-xs-12">
+                        <div id="cart">
+                          <table className="table-cart">
                             <thead className="hidden-xs">
-                                <tr>
-                                    <th className="remove tableDelete">
-                                        <span></span>
-                                    </th>
-                                    <th className="image tableImage">
-                                        <span>Hình ảnh</span>
-                                    </th>
-                                    <th className="tableName">
-                                        <span>Sản phẩm</span>
-                                    </th>
-                                    <th className="price tablePrice">
-                                        <span>Giá</span>
-                                    </th>
-                                    <th className="qty tableQuantity">
-                                        <span>Số lượng</span>
-                                    </th>
-                                    <th className="total tableTotal">
-                                        <span></span>
-                                    </th>
-                                </tr>
+                              <tr>
+                                <th className="remove tableDelete">
+                                  <span></span>
+                                </th>
+                                <th className="image tableImage">
+                                  <span>Hình ảnh</span>
+                                </th>
+                                <th className="tableName">
+                                  <span>Sản phẩm</span>
+                                </th>
+                                <th className="price tablePrice">
+                                  <span>Giá</span>
+                                </th>
+                                <th className="qty tableQuantity">
+                                  <span>Số lượng</span>
+                                </th>
+                                <th className="total tableTotal">
+                                  <span></span>
+                                </th>
+                              </tr>
                             </thead>
 
-                            {/* mapping sản phẩm */}
+                            <tbody>
+                              {productList.map((product, index) => (
+                                <tr
+                                  key={product.index}
+                                  className="line-item-container"
+                                >
+                                  <td className="remove text-center hidden-xs">
+                                    <a
+                                      href=""
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        alert(
+                                          "Bạn không thể xóa vì tính năng này chưa có :))"
+                                        );
+                                      }}
+                                    >
+                                      <svg
+                                        width="20"
+                                        version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        height="auto"
+                                        viewBox="0 0 64 64"
+                                        enableBackground="new 0 0 64 64"
+                                      >
+                                        <g>
+                                          <path
+                                            fill="#1D1D1B"
+                                            d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z"
+                                          ></path>
+                                        </g>
+                                      </svg>
+                                    </a>
+                                  </td>
+                                  <td className="image text-center">
+                                    <div className="product_image_cart">
+                                      <Link
+                                        to={"/collections/" + product.itemId}
+                                      >
+                                        <img
+                                          src={product.cartImage}
+                                          alt={product.name}
+                                        />
+                                      </Link>
+                                      <p className="visible-xs">
+                                        <a
+                                          className="btnDeleteCart"
+                                          href="/cart/change?line=1&amp;quantity=0"
+                                        >
+                                          Xóa
+                                        </a>
+                                      </p>
+                                    </div>
+                                  </td>
+                                  <td className="tableName">
+                                    <span className="nameInCart">
+                                      <Link
+                                        to={"/collections/" + product.itemId}
+                                      >
+                                        <h3>{product.name}</h3>
+                                      </Link>
+                                      <p className="variant">
+                                        <span className="variant_title">
+                                          {product.size}
+                                        </span>
+                                      </p>
+                                    </span>
+                                    <div className="visible-xs">
+                                      <p>
+                                        <span>{product.price}đ</span>
+                                      </p>
+                                      <p className="visible-xs">
+                                        Thành tiền:{" "}
+                                        <span className="line-item-total">
+                                          {product.price * product.quantity}đ
+                                        </span>
+                                      </p>
+                                    </div>
+                                  </td>
+                                  <td className="price text-center priceLine hidden-xs">
+                                    <p>
+                                      <span>{product.price}đ</span>
+                                    </p>
+                                  </td>
+                                  <td className="qty text-center">
+                                    <div className="qty quantity-partent qty-click clearfix">
+                                      <button
+                                        onClick={() => removeProduct(index)}
+                                        type="button"
+                                        className="qtyminus qty-btn"
+                                      >
+                                        -
+                                      </button>
+                                      <input
+                                        readOnly=""
+                                        type="text"
+                                        size="4"
+                                        name="updates[]"
+                                        min="1"
+                                        id={"updates" + product.itemId}
+                                        value={productList[index].quantity}
+                                        className="tc line-item-qty item-quantity"
+                                      />
 
-                            
+                                      <button
+                                        onClick={() => addProduct(index)}
+                                        type="button"
+                                        className="qtyplus qty-btn"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </td>
+                                  <td className="total text-center hidden-xs">
+                                    <p className="price">
+                                      <span className="line-item-total">
+                                        {product.price * product.quantity}đ
+                                      </span>
+                                    </p>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div className="col-md-9 col-sm-12 col-xs-12">
+                        <div className="checkout-note clearfix">
+                          <label className="clearfix">Ghi chú: </label>
+                          <textarea
+                            id="note"
+                            name="note"
+                            rows="8"
+                            cols="50"
+                          ></textarea>
+                          <div className="promotion304">
+                            <ul>
+                              <li>
+                                <img
+                                  src="https://file.hstatic.net/200000000133/file/checked_policy_88963cf2ccb048e89303d8799c47c3e0.png"
+                                  alt="Vận chuyển"
+                                />
+                                Miễn phí giao hàng cho hóa đơn từ 699.000đ
+                              </li>
+                              <li>
+                                <img
+                                  src="https://file.hstatic.net/200000000133/file/checked_policy_88963cf2ccb048e89303d8799c47c3e0.png"
+                                  alt="Vận chuyển"
+                                />
+                                Phí giao hàng 20.000đ cho hóa đơn dưới 699.000đ
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-3 col-sm-12 col-xs-12 text-right">
+                        <p className="order-infor">
+                          Tổng cộng:
+                          <span className="total_price">
+                            <b>{totalPurchase}đ</b>
+                          </span>
+                        </p>
 
-                                {lists.map((product, index )=> (
-                                    <tr key={product.index} class="line-item-container" data-inventory="18" data-variant-id="1093561953">
-                                        <td class="remove text-center hidden-xs">
-                                            {/* <a>
-                                                <svg width="20" version="1.1" xmlns="http://www.w3.org/2000/svg" height="auto" viewBox="0 0 64 64" enable-background="new 0 0 64 64">
-                                                    <g>
-                                                        <path fill="#1D1D1B" d="M28.941,31.786L0.613,60.114c-0.787,0.787-0.787,2.062,0,2.849c0.393,0.394,0.909,0.59,1.424,0.59   c0.516,0,1.031-0.196,1.424-0.59l28.541-28.541l28.541,28.541c0.394,0.394,0.909,0.59,1.424,0.59c0.515,0,1.031-0.196,1.424-0.59   c0.787-0.787,0.787-2.062,0-2.849L35.064,31.786L63.41,3.438c0.787-0.787,0.787-2.062,0-2.849c-0.787-0.786-2.062-0.786-2.848,0   L32.003,29.15L3.441,0.59c-0.787-0.786-2.061-0.786-2.848,0c-0.787,0.787-0.787,2.062,0,2.849L28.941,31.786z"></path>
-                                                    </g>
-                                                </svg>
-                                            </a> */}
-                                        </td>
-                                        <td class="image text-center">
-                                            <div class="product_image_cart">
-                                                <a href="/products/vay-trong-bo-vest-vay-23svjo003v">
-                                                    <img src={product.imgURL} alt="Váy trong bộ Vest-Váy,  23SVJO003V"/>
-                                                </a>
-                                                <p class="visible-xs">
-                                                    <a class="btnDeleteCart" href="/cart/change?line=1&amp;quantity=0">
-                                                        Xóa
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td class="tableName">
-                                            <span class="nameInCart">
-                                                <a href="/products/vay-trong-bo-vest-vay-23svjo003v">
-                                                    <h3>{product.name}</h3>
-                                                </a>
-                                                <p class="variant">
-                                                    <span class="variant_title">{product.variant}</span>
-                                                </p>
-                                            </span>
-                                            <div class="visible-xs">
-                                                <p>
-                                                    <span>{product.price}</span>
-                                                </p>
-                                                <p class="visible-xs">
-                                                    Thành tiền: <span class="line-item-total">{product.price*product.count}d</span>
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td class="price text-center priceLine hidden-xs">
-                                            <p>
-                                                <span>{product.price}</span>
-                                            </p>
-                                        </td>
-                                        <td class="qty text-center">
-                                            <div class="qty quantity-partent qty-click clearfix">
-                                                <button onClick={()=>removeProduct(index)} type="button" class="qtyminus qty-btn" >-</button>
-                                                <input readonly="" type="text" size="4" name="updates[]" min="1" id="updates_1093561953" value={product.count} class="tc line-item-qty item-quantity"/>
-                        
-                                                <button onClick={() => addProduct(index)} type="button" class="qtyplus qty-btn" >+</button>
-                                            </div>
-                                        </td>
-                                        <td class="total text-center hidden-xs">
-                                            <p class="price">
-                                                <span class="line-item-total">
-                                                {product.price*product.count}
-                                                </span>
-                                            </p>
-                                        </td>
-                                    </tr>
-                                ))
-
-                                }
-                            
-
-
-                        </table>
-                        
-                        <p class="order-infor">					
-							Tổng cộng:
-							<span class="total_price"><b>{total}đ</b></span>
-						</p>
-
-                        <div class="cart-buttons">
-							<button onClick={payment} type="submit" id="checkout" class="checkLimitCart btnStyle" name="checkout">Thanh toán</button>
-						</div>
-                        
+                        <div className="cart-buttons">
+                          <button
+                            type="submit"
+                            id="checkout"
+                            className="checkLimitCart btnStyle"
+                            name="checkout"
+                          >
+                            Thanh toán
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                </form>
+                  </form>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-    );
+      </div>
+    )
+  );
 };
 
 export default Cart;
